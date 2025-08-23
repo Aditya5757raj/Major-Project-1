@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nyay AI - An AI Platform for Legal Assistance</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <!-- Animated Background Particles -->
+  <div class="particles" id="particles"></div>
+
+  <header role="banner">
+    <nav role="navigation" aria-label="Main navigation">
+      <div class="logo">Nyay AI</div>
+      <ul class="nav-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#trust">Why Trust Us</a></li>
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#resources">Legal Resources</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div style="display: flex; align-items: center;">
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+          <i class="fas fa-moon" id="theme-icon"></i>
+        </button>
+        <a href="#resources" class="cta-button">Ask Your Question</a>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Open mobile menu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="close-mobile-menu" onclick="toggleMobileMenu()" aria-label="Close mobile menu">
+      <i class="fas fa-times"></i>
+    </button>
+    <ul>
+      <li><a href="#home" onclick="toggleMobileMenu()">Home</a></li>
+      <li><a href="#trust" onclick="toggleMobileMenu()">Why Trust Us</a></li>
+      <li><a href="#how" onclick="toggleMobileMenu()">How It Works</a></li>
+      <li><a href="#resources" onclick="toggleMobileMenu()">Legal Resources</a></li>
+      <li><a href="#testimonials" onclick="toggleMobileMenu()">Testimonials</a></li>
+      <li><a href="#contact" onclick="toggleMobileMenu()">Contact</a></li>
+    </ul>
+  </div>
+
+  <main role="main">
+    <section id="home" class="hero" data-animate>
+      <div class="hero-bg"></div>
+      <div class="hero-waves"></div>
+      <h1>Nyay AI: <span class="highlight typing-text">An AI Platform</span> for Legal Assistance</h1>
+      <p>Know your rights in simple language. Instant, AI-powered guidance for every Indian citizen.</p>
+      <div class="btns">
+        <a href="chatbot.html" class="primary">Ask Your Question</a>
+        <a href="#how" class="secondary">How It Works</a>
+      </div>
+    </section>
+
+    <section id="trust" class="trust" data-animate>
+      <h2>Why Indians Trust Nyay AI</h2>
+      <p>Built by legal experts and AI specialists to serve every Indian citizen</p>
+      <div class="trust-cards">
+        <div class="trust-card" data-animate="left">
+          <i class="fas fa-shield-alt"></i>
+          <h3>100% Secure & Private</h3>
+          <p>Your queries are encrypted and never shared. Privacy guaranteed.</p>
+        </div>
+        <div class="trust-card" data-animate="up">
+          <i class="fas fa-check-circle"></i>
+          <h3>Expert Verified</h3>
+          <p>Information verified by top Indian lawyers and legal experts.</p>
+        </div>
+        <div class="trust-card" data-animate="right">
+          <i class="fas fa-sync-alt"></i>
+          <h3>Always Updated</h3>
+          <p>Latest laws, amendments, and judgments updated in real time.</p>
+        </div>
+      </div>
+      <div class="stats">
+        <div class="stat" data-animate="scale">
+          <h3><span class="counter" data-target="50000">0</span>+</h3>
+          <p>Questions Answered</p>
+        </div>
+        <div class="stat" data-animate="scale">
+          <h3><span class="counter" data-target="25000">0</span>+</h3>
+          <p>Happy Users</p>
+        </div>
+        <div class="stat" data-animate="scale">
+          <h3><span class="counter" data-target="500">0</span>+</h3>
+          <p>Legal Topics</p>
+        </div>
+        <div class="stat" data-animate="scale">
+          <h3>24/7</h3>
+          <p>Available</p>
+        </div>
+      </div>
+      <blockquote style="margin-top:2rem;font-style:italic;color:var(--text-secondary);" data-animate>
+        "Finally, legal help in simple Hindi! Got clear answers about my property dispute in minutes."<br>
+        <b>- Rajesh Kumar, Delhi</b>
+      </blockquote>
+    </section>
+
+    <section id="how" class="how-works" data-animate>
+      <h2>How Nyay AI Works</h2>
+      <p>Get legal guidance in 4 simple steps. No jargon, no complicated forms.</p>
+      <div class="steps">
+        <div class="step" data-animate="left" data-step="1">
+          <i class="fas fa-question-circle"></i>
+          <h3>Ask Your Question</h3>
+          <p>Type your problem in Hindi or English.</p>
+        </div>
+        <div class="step" data-animate="up" data-step="2">
+          <i class="fas fa-brain"></i>
+          <h3>AI Analyzes</h3>
+          <p>Nyay AI searches relevant Indian laws and rights.</p>
+        </div>
+        <div class="step" data-animate="up" data-step="3">
+          <i class="fas fa-gavel"></i>
+          <h3>Get Relevant Laws</h3>
+          <p>Receive specific acts, rights, and case studies.</p>
+        </div>
+        <div class="step" data-animate="right" data-step="4">
+          <i class="fas fa-clipboard-check"></i>
+          <h3>Understand & Act</h3>
+          <p>Clear guidance with actionable next steps.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="resources" class="resources" data-animate>
+      <h2>Start with Common Questions</h2>
+      <div class="resource-grid">
+        <div class="resource" data-animate="left">
+          <h3><i class="fas fa-home"></i> Property Rights</h3>
+          <p>My neighbor is building on my land</p>
+        </div>
+        <div class="resource" data-animate="up">
+          <h3><i class="fas fa-briefcase"></i> Employment Law</h3>
+          <p>Can my employer fire me without notice?</p>
+        </div>
+        <div class="resource" data-animate="up">
+          <h3><i class="fas fa-shopping-cart"></i> Consumer Rights</h3>
+          <p>I bought a defective product, need refund</p>
+        </div>
+        <div class="resource" data-animate="right">
+          <h3><i class="fas fa-heart"></i> Family Law</h3>
+          <p>What are my rights in divorce?</p>
+        </div>
+        <div class="resource" data-animate="left">
+          <h3><i class="fas fa-car"></i> Traffic Violations</h3>
+          <p>Got a challan, can I contest?</p>
+        </div>
+        <div class="resource" data-animate="right">
+          <h3><i class="fas fa-digital-tachograph"></i> Digital Rights</h3>
+          <p>Someone using my photos without permission</p>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:2rem;" data-animate>
+        <a href="#contact" class="cta-button">Ask Your Custom Question</a>
+      </div>
+    </section>
+
+    <section id="testimonials" class="testimonials" data-animate>
+      <h2>What Indians Are Saying</h2>
+      <div class="carousel-container">
+        <div class="carousel" id="testimonialCarousel">
+          <div class="testimonial">
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Priya Sharma">
+            <p>"Nyay AI helped me understand my rights when my landlord tried to evict me illegally. The explanations were clear and actionable."</p>
+            <small><strong>- Priya Sharma, Mumbai</strong></small>
+            <div style="margin-top: 1rem;">
+              <i class="fas fa-star" style="color: #ffd700;"></i>
+              <i class="fas fa-star" style="color: #ffd700;"></i>
+              <i class="fas fa-star" style="color: #ffd700;"></i>
+              <i class="fas fa-star" style="color: #ffd700;"></i>
+              <i class="fas fa-star" style="color: #ffd700;"></i>
+            </div>
+          </div>
+          <div class="testimonial">
+            <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Rajesh Kumar">
+            <p>"Got instant help about consumer rights when I bought a defective phone. Saved me thousands of rupees!"</p>
+            <small><strong>- Rajesh Kumar, Delhi</strong></small>
+            <div style="margin-top: 1rem;">
+              <i class="fas fa-star" style="color: #ffd700;"></i>
+              <i class="fas fa-star" style="color: #ffd700;"></i>
+              <i class="fas fa-star" style="color: #ffd700;"></i>
+              <i class="fas fa-star" style="color: #ffd700;"></i>
+              <i class="fas fa-star" style="color: #ffd700;"></i>
+            </div>
+          </div>
+          <div class="testimonial">
+            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Sunita Devi">
+            <p>"Nyay AI explained my rights against dowry harassment. It gave me confidence to stand up and seek justice."</p>
+            <small><strong>- Sunita Devi, Patna</strong></small>
+            <div style="margin-top: 1rem;">
+              <i class="fas fa-star" style="color: #ffd700;"></i>
+              <i class="fas fa-star" style="color: #ffd700;"></i>
+              <i class="fas fa-star" style="color: #ffd700;"></i>
+              <i class="fas fa-star" style="color: #ffd700;"></i>
+              <i class="fas fa-star" style="color: #ffd700;"></i>
+            </div>
+          </div>
+          <div class="testimonial">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Arjun Patel">
+            <p>"As a small business owner, Nyay AI helped me understand labor laws and compliance requirements easily."</p>
+            <small><strong>- Arjun Patel, Ahmedabad</strong></small>
+            <div style="margin-top: 1rem;">
+              <i class="fas fa-star" style="color: #ffd700;"></i>
+              <i class="fas fa-star" style="color: #ffd700;"></i>
+              <i class="fas fa-star" style="color: #ffd700;"></i>
+              <i class="fas fa-star" style="color: #ffd700;"></i>
+              <i class="fas fa-star" style="color: #ffd700;"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-controls">
+        <button class="carousel-btn" onclick="previousTestimonial()" aria-label="Previous testimonial">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <div class="carousel-dots" id="carouselDots"></div>
+        <button class="carousel-btn" onclick="nextTestimonial()" aria-label="Next testimonial">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </section>
+
+    <section id="contact" class="contact" data-animate>
+      <h2>Contact Us</h2>
+      <form onsubmit="handleFormSubmit(event)">
+        <input type="text" placeholder="Your Name" required aria-label="Your Name">
+        <input type="email" placeholder="Your Email" required aria-label="Your Email">
+        <textarea rows="4" placeholder="Your Query" required aria-label="Your Query"></textarea>
+        <button type="submit">
+          <i class="fas fa-paper-plane"></i> Send Message
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <footer role="contentinfo">
+    <div class="links">
+      <a href="#home">Home</a> |
+      <a href="#trust">Why Trust Us</a> |
+      <a href="#how">How It Works</a> |
+      <a href="#resources">Resources</a> |
+      <a href="#testimonials">Testimonials</a> |
+      <a href="#contact">Contact</a>
+    </div>
+    <p>© 2025 Nyay AI. All Rights Reserved. | Empowering Justice Through Technology</p>
+  </footer>
+
+  <button id="backToTop" onclick="scrollToTop()" aria-label="Back to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+  <script src="index.js"></script>
+
+</body>
+</html>
