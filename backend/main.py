@@ -94,7 +94,7 @@ async def search_documents(query: SearchQuery = Body(...)) -> Dict[str, Any]:
     try:
         result = await perform_semantic_search(
             query=query.search_key,
-            top_k=query.top,
+            top_k=5,
             licenseID=query.licenseID
         )
         if "error" in result:
