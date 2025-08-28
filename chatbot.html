@@ -203,12 +203,13 @@
   </button>
 
   <script>
+         const API_BASE_URL = 'http://127.0.0.1:8000';
     let chatHistory = [{ id: 1, title: "Tenant rights discussion" }, { id: 2, title: "Consumer protection query" }];
     let activeChatId = 1;
     let isNewChat = true;
 
     document.addEventListener('DOMContentLoaded', function() {
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) { setTheme('dark'); } else { setTheme('light'); }
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) { setTheme('light'); } else { setTheme('dark'); }
       document.getElementById('chatInput').focus();
       createParticles();
       renderWelcomeScreen();
@@ -305,7 +306,7 @@
           document.getElementById('chatMessages').innerHTML = '';
       } else { newChat(); }
     }
-    
+
     function renderWelcomeScreen() {
         const chatMessages = document.getElementById('chatMessages');
         chatMessages.innerHTML = `
@@ -335,30 +336,103 @@
     }
 
     async function sendMessage() {
-      const input = document.getElementById('chatInput');
-      const message = input.value.trim();
-      if (!message) return;
-      if (isNewChat) {
-          addChat(message.substring(0, 30) + (message.length > 30 ? '...' : ''));
-          document.getElementById('chatMessages').innerHTML = '';
-      }
-      addMessageToUI(message, 'user');
-      input.value = '';
-      handleInput(input);
-      showTypingIndicator();
-      setTimeout(() => { hideTypingIndicator(); generateAIResponse(message); }, 1500 + Math.random() * 1500);
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+    if (!message) return;
+
+    if (isNewChat) {
+        // Assuming addChat creates a new chat in the sidebar
+        addChat(message.substring(0, 30) + (message.length > 30 ? '...' : ''));
+        document.getElementById('chatMessages').innerHTML = '';
+        isNewChat = false; // Set to false after creating the first message
     }
+
+    addMessageToUI(message, 'user');
+    input.value = '';
+    handleInput(input); // Adjust input height if needed
+    showTypingIndicator();
+
+    // Prepare the payload for the backend
+    const payload = {
+        search_key: message,
+        licenseID: null // Or get this from an element if you add one to your chat UI
+    };
+
+    try {
+        // Make the API call to your backend
+        const response = await fetch(`${API_BASE_URL}/search/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+            // Try to parse a detailed error message from the backend
+            const errorData = await response.json().catch(() => ({ detail: 'An unknown error occurred.' }));
+            throw new Error(errorData.detail || 'Failed to get a response from the server.');
+        }
+
+        const result = await response.json();
+        
+        // Extract the answer and display it
+        const aiResponse = result.data.answer;
+        console.log(aiResponse);
+        addMessageToUI(aiResponse, 'ai');
+
+    } catch (error) {
+        // Display the error message in the chat UI
+        addMessageToUI(`Error: ${error.message}`, 'error');
+    } finally {
+        // Always hide the typing indicator, whether the call succeeded or failed
+        hideTypingIndicator();
+    }
+}
     
-    function addMessageToUI(content, sender, isHTML = false) {
-      const chatMessages = document.getElementById('chatMessages');
-      const messageDiv = document.createElement('div');
-      messageDiv.className = `message ${sender}`;
-      // --- MODIFIED: Use icons for avatars ---
-      const avatarIcon = sender === 'user' ? 'fas fa-user' : 'fas fa-robot';
-      messageDiv.innerHTML = `<div class="message-avatar"><i class="${avatarIcon}"></i></div><div class="message-content">${isHTML ? content : `<p>${content}</p>`}<div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div></div>`;
-      chatMessages.appendChild(messageDiv);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
+    // function addMessageToUI(content, sender, isHTML = false) {
+    //   const chatMessages = document.getElementById('chatMessages');
+    //   const messageDiv = document.createElement('div');
+    //   messageDiv.className = `message ${sender}`;
+    //   // --- MODIFIED: Use icons for avatars ---
+    //   const avatarIcon = sender === 'user' ? 'fas fa-user' : 'fas fa-robot';
+    //   messageDiv.innerHTML = `<div class="message-avatar"><i class="${avatarIcon}"></i></div><div class="message-content">${isHTML ? content : `<p>${content}</p>`}<div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div></div>`;
+    //   chatMessages.appendChild(messageDiv);
+    //   chatMessages.scrollTop = chatMessages.scrollHeight;
+    // }
+function addMessageToUI(content, sender, isHTML = false) {
+  const chatMessages = document.getElementById('chatMessages');
+  const messageDiv = document.createElement('div');
+  messageDiv.className = `message ${sender}`;
+
+  // Avatar icons
+  const avatarIcon = sender === 'user' ? 'fas fa-user' : 'fas fa-robot';
+
+  // Format the text (convert line breaks, preserve spacing, etc.)
+  let formattedContent = isHTML
+    ? content
+    : `<p>${content
+        .replace(/\n/g, '<br>')              // Preserve line breaks
+        .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') // Convert **bold**
+        .replace(/\*(.*?)\*/g, '<i>$1</i>')  // Convert *italic*
+        .replace(/`([^`]+)`/g, '<code>$1</code>') // Inline code formatting
+      }</p>`;
+
+  messageDiv.innerHTML = `
+    <div class="message-avatar">
+      <i class="${avatarIcon}"></i>
+    </div>
+    <div class="message-content">
+      ${formattedContent}
+      <div class="message-time">
+        ${new Date().toLocaleTimeString([], { hour: '2-digit', minute:'2-digit' })}
+      </div>
+    </div>
+  `;
+
+  chatMessages.appendChild(messageDiv);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
 
     function showTypingIndicator() {
       if (document.getElementById('typingIndicator')) return;
