@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+python-multipart
+mysql-connector-python
+google-generativeai
+pydantic
+requests
+numpy
+pandas
+sentence-transformers
+faiss-cpu
+nltk
+tqdm
+scikit-learn
+aiofiles
+python-dotenv

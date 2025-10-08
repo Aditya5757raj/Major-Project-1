@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nyay AI - Login & Signup</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     /* CSS Variables for theming */
@@ -17,7 +19,7 @@
       --text-primary: #1a202c;
       --text-secondary: #4a5568;
       --border-light: #e2e8f0;
-      --shadow-medium: 0 4px 6px rgba(0,0,0,0.1);
+      --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.1);
       --gradient-orange: linear-gradient(135deg, #ff9933 0%, #ff6b35 100%);
       --gradient-glow: 0 0 20px rgba(255, 107, 53, 0.3);
       --glassmorphism: rgba(255, 255, 255, 0.1);
@@ -43,12 +45,13 @@
       padding: 0;
       box-sizing: border-box;
     }
-    
+
     body {
       font-family: 'Inter', sans-serif;
       background: var(--white);
       color: var(--text-primary);
-      overflow-x: hidden; /* Prevent horizontal scroll */
+      overflow-x: hidden;
+      /* Prevent horizontal scroll */
       transition: background-color 0.3s ease, color 0.3s ease;
       min-height: 100vh;
       position: relative;
@@ -78,10 +81,23 @@
     }
 
     @keyframes float {
-      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-      10% { opacity: 0.3; }
-      90% { opacity: 0.3; }
-      100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 0.3;
+      }
+
+      90% {
+        opacity: 0.3;
+      }
+
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
     }
 
     /* Header */
@@ -90,7 +106,7 @@
       top: 0;
       left: 0;
       width: 100%;
-      background: rgba(255,255,255,0.95);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: var(--backdrop-blur);
       border-bottom: 1px solid var(--border-light);
       z-index: 1000;
@@ -98,7 +114,7 @@
     }
 
     [data-theme="dark"] header {
-      background: rgba(26,32,44,0.95);
+      background: rgba(26, 32, 44, 0.95);
     }
 
     nav {
@@ -107,11 +123,13 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 1rem 2rem; /* Responsive padding */
+      padding: 1rem 2rem;
+      /* Responsive padding */
     }
 
     .logo {
-      font-size: clamp(1.2rem, 1.5vw + 0.5rem, 1.8rem); /* Fluid typography */
+      font-size: clamp(1.2rem, 1.5vw + 0.5rem, 1.8rem);
+      /* Fluid typography */
       font-weight: 800;
       color: var(--primary-blue);
       display: flex;
@@ -131,8 +149,15 @@
     }
 
     @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.1);
+      }
     }
 
     .theme-toggle {
@@ -152,14 +177,18 @@
 
     /* Main Container */
     .auth-container {
-      flex-grow: 1; /* Allow container to take available space */
+      flex-grow: 1;
+      /* Allow container to take available space */
       display: flex;
-      flex-direction: column; /* Stack elements vertically on small screens */
+      flex-direction: column;
+      /* Stack elements vertically on small screens */
       align-items: center;
       justify-content: center;
-      padding: 120px 1rem 2rem; /* Adjusted top padding for header, responsive horizontal padding */
+      padding: 120px 1rem 2rem;
+      /* Adjusted top padding for header, responsive horizontal padding */
       position: relative;
-      width: 100%; /* Ensure it takes full width */
+      width: 100%;
+      /* Ensure it takes full width */
     }
 
     .auth-bg {
@@ -178,17 +207,20 @@
       backdrop-filter: var(--backdrop-blur);
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 25px;
-      padding: 2.5rem; /* Slightly reduced padding for smaller screens, will adjust */
+      padding: 2.5rem;
+      /* Slightly reduced padding for smaller screens, will adjust */
       width: 100%;
-      max-width: 450px; /* Max width for larger screens */
-      box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+      max-width: 450px;
+      /* Max width for larger screens */
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       position: relative;
       overflow: hidden;
       opacity: 0;
       transform: translateY(30px);
       animation: fadeInUp 0.8s ease 0.3s forwards;
-      margin: 0 1rem; /* Horizontal margin for small screens */
+      margin: 0 1rem;
+      /* Horizontal margin for small screens */
     }
 
     [data-theme="dark"] .auth-card {
@@ -214,7 +246,7 @@
 
     .auth-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 35px 70px rgba(0,0,0,0.15);
+      box-shadow: 0 35px 70px rgba(0, 0, 0, 0.15);
     }
 
     @keyframes fadeInUp {
@@ -250,7 +282,8 @@
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 2;
       position: relative;
-      font-size: clamp(0.9rem, 1.2vw, 1rem); /* Fluid typography */
+      font-size: clamp(0.9rem, 1.2vw, 1rem);
+      /* Fluid typography */
     }
 
     .toggle-btn.active {
@@ -288,6 +321,7 @@
         opacity: 0;
         transform: translateX(20px);
       }
+
       to {
         opacity: 1;
         transform: translateX(0);
@@ -295,7 +329,8 @@
     }
 
     .form-title {
-      font-size: clamp(1.5rem, 2vw + 0.5rem, 2rem); /* Fluid typography */
+      font-size: clamp(1.5rem, 2vw + 0.5rem, 2rem);
+      /* Fluid typography */
       font-weight: 700;
       color: var(--text-primary);
       margin-bottom: 0.5rem;
@@ -306,7 +341,8 @@
       color: var(--text-secondary);
       text-align: center;
       margin-bottom: 2rem;
-      font-size: clamp(0.9rem, 1.2vw, 1rem); /* Fluid typography */
+      font-size: clamp(0.9rem, 1.2vw, 1rem);
+      /* Fluid typography */
     }
 
     .form-group {
@@ -319,7 +355,8 @@
       margin-bottom: 0.5rem;
       color: var(--text-primary);
       font-weight: 500;
-      font-size: clamp(0.8rem, 1vw, 0.9rem); /* Fluid typography */
+      font-size: clamp(0.8rem, 1vw, 0.9rem);
+      /* Fluid typography */
     }
 
     .form-input {
@@ -330,7 +367,8 @@
       background: var(--white);
       color: var(--text-primary);
       font-family: inherit;
-      font-size: clamp(0.9rem, 1.2vw, 1rem); /* Fluid typography */
+      font-size: clamp(0.9rem, 1.2vw, 1rem);
+      /* Fluid typography */
       transition: all 0.3s ease;
       position: relative;
     }
@@ -357,7 +395,7 @@
       transition: color 0.3s ease;
     }
 
-    .form-input:focus + .input-icon {
+    .form-input:focus+.input-icon {
       color: var(--primary-orange);
     }
 
@@ -385,7 +423,8 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 2rem;
-      font-size: clamp(0.8rem, 1vw, 0.9rem); /* Fluid typography */
+      font-size: clamp(0.8rem, 1vw, 0.9rem);
+      /* Fluid typography */
     }
 
     .remember-me {
@@ -419,7 +458,8 @@
       color: white;
       border: none;
       border-radius: 50px;
-      font-size: clamp(0.9rem, 1.2vw, 1rem); /* Fluid typography */
+      font-size: clamp(0.9rem, 1.2vw, 1rem);
+      /* Fluid typography */
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -435,7 +475,7 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
       transition: left 0.5s ease;
     }
 
@@ -473,8 +513,13 @@
     }
 
     @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     /* Social Login */
@@ -502,7 +547,8 @@
       background: var(--white);
       padding: 0 1rem;
       color: var(--text-secondary);
-      font-size: clamp(0.8rem, 1vw, 0.9rem); /* Fluid typography */
+      font-size: clamp(0.8rem, 1vw, 0.9rem);
+      /* Fluid typography */
     }
 
     [data-theme="dark"] .social-divider span {
@@ -513,13 +559,15 @@
       display: flex;
       gap: 1rem;
       margin-top: 1rem;
-      flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+      flex-wrap: wrap;
+      /* Allow buttons to wrap on smaller screens */
       justify-content: center;
     }
 
     .social-btn {
       flex: 1;
-      min-width: 120px; /* Ensure buttons don't get too small */
+      min-width: 120px;
+      /* Ensure buttons don't get too small */
       padding: 0.75rem;
       border: 2px solid var(--border-light);
       border-radius: 12px;
@@ -532,7 +580,8 @@
       align-items: center;
       justify-content: center;
       gap: 0.5rem;
-      font-size: clamp(0.9rem, 1.1vw, 1rem); /* Fluid typography */
+      font-size: clamp(0.9rem, 1.1vw, 1rem);
+      /* Fluid typography */
     }
 
     [data-theme="dark"] .social-btn {
@@ -542,7 +591,7 @@
     .social-btn:hover {
       border-color: var(--primary-orange);
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     }
 
     .social-btn.google:hover {
@@ -571,9 +620,19 @@
     }
 
     @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      75% { transform: translateX(5px); }
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      25% {
+        transform: translateX(-5px);
+      }
+
+      75% {
+        transform: translateX(5px);
+      }
     }
 
     .form-input.error {
@@ -591,7 +650,8 @@
       margin-bottom: 1rem;
       display: none;
       animation: slideDown 0.5s ease;
-      font-size: clamp(0.9rem, 1.2vw, 1rem); /* Fluid typography */
+      font-size: clamp(0.9rem, 1.2vw, 1rem);
+      /* Fluid typography */
     }
 
     .success-message.show {
@@ -603,6 +663,7 @@
         opacity: 0;
         transform: translateY(-10px);
       }
+
       to {
         opacity: 1;
         transform: translateY(0);
@@ -611,7 +672,8 @@
 
     /* Terms and Privacy */
     .terms-text {
-      font-size: clamp(0.75rem, 1vw, 0.8rem); /* Fluid typography */
+      font-size: clamp(0.75rem, 1vw, 0.8rem);
+      /* Fluid typography */
       color: var(--text-secondary);
       text-align: center;
       margin-top: 1rem;
@@ -629,7 +691,8 @@
     /* Back to Home */
     .back-home {
       position: absolute;
-      top: 100px; /* Adjusted to be below the fixed header */
+      top: 100px;
+      /* Adjusted to be below the fixed header */
       left: 2rem;
       color: var(--text-secondary);
       text-decoration: none;
@@ -639,7 +702,8 @@
       font-weight: 500;
       transition: all 0.3s ease;
       z-index: 10;
-      font-size: clamp(0.9rem, 1.2vw, 1rem); /* Fluid typography */
+      font-size: clamp(0.9rem, 1.2vw, 1rem);
+      /* Fluid typography */
     }
 
     .back-home:hover {
@@ -652,6 +716,7 @@
       nav {
         padding: 1rem 1.5rem;
       }
+
       .auth-card {
         padding: 2.2rem;
       }
@@ -667,12 +732,15 @@
       }
 
       .auth-container {
-        padding: 100px 0.5rem 1rem; /* More compact padding */
+        padding: 100px 0.5rem 1rem;
+        /* More compact padding */
       }
 
       .auth-card {
-        padding: 1.8rem; /* Further reduced padding */
-        border-radius: 20px; /* Slightly smaller border radius */
+        padding: 1.8rem;
+        /* Further reduced padding */
+        border-radius: 20px;
+        /* Slightly smaller border radius */
       }
 
       .form-title {
@@ -693,14 +761,17 @@
       }
 
       .form-input {
-        padding: 0.8rem 0.8rem 0.8rem 2.5rem; /* Adjust input padding */
+        padding: 0.8rem 0.8rem 0.8rem 2.5rem;
+        /* Adjust input padding */
         font-size: 0.95rem;
       }
 
-      .input-icon, .password-toggle {
+      .input-icon,
+      .password-toggle {
         font-size: 1rem;
         left: 0.8rem;
       }
+
       .password-toggle {
         right: 0.8rem;
       }
@@ -713,20 +784,25 @@
       }
 
       .social-buttons {
-        flex-direction: column; /* Stack social buttons vertically */
+        flex-direction: column;
+        /* Stack social buttons vertically */
         gap: 0.8rem;
       }
 
       .social-btn {
-        min-width: unset; /* Remove min-width for full flexibility */
-        width: 100%; /* Take full width on small screens */
+        min-width: unset;
+        /* Remove min-width for full flexibility */
+        width: 100%;
+        /* Take full width on small screens */
         padding: 0.6rem;
         font-size: 0.95rem;
       }
 
       .back-home {
-        position: static; /* Remove absolute positioning */
-        margin: 1rem auto 1rem auto; /* Center it and add vertical margin */
+        position: static;
+        /* Remove absolute positioning */
+        margin: 1rem auto 1rem auto;
+        /* Center it and add vertical margin */
         justify-content: center;
         top: auto;
         left: auto;
@@ -786,10 +862,12 @@
         font-size: 0.9rem;
       }
 
-      .input-icon, .password-toggle {
+      .input-icon,
+      .password-toggle {
         font-size: 0.9rem;
         left: 0.7rem;
       }
+
       .password-toggle {
         right: 0.7rem;
       }
@@ -821,7 +899,10 @@
 
     /* Accessibility */
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
+
+      *,
+      *::before,
+      *::after {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
@@ -831,10 +912,12 @@
     *:focus {
       outline: 2px solid var(--primary-orange);
       outline-offset: 2px;
-      border-radius: 4px; /* Ensure outline is rounded */
+      border-radius: 4px;
+      /* Ensure outline is rounded */
     }
   </style>
 </head>
+
 <body>
   <!-- Animated Background Particles -->
   <div class="particles" id="particles"></div>
@@ -850,7 +933,7 @@
 
   <div class="auth-container">
     <div class="auth-bg"></div>
-    
+
     <a href="index.html" class="back-home">
       <i class="fas fa-arrow-left"></i>
       Back to Home
@@ -877,7 +960,8 @@
         <div class="form-group">
           <label class="form-label" for="loginEmail">Email Address</label>
           <div style="position: relative;">
-            <input type="email" id="loginEmail" class="form-input" placeholder="Enter your email" required aria-required="true">
+            <input type="email" id="loginEmail" class="form-input" placeholder="Enter your email" required
+              aria-required="true">
             <i class="fas fa-envelope input-icon"></i>
           </div>
           <div class="error-message" id="loginEmailError" aria-live="polite"></div>
@@ -886,9 +970,11 @@
         <div class="form-group">
           <label class="form-label" for="loginPassword">Password</label>
           <div style="position: relative;">
-            <input type="password" id="loginPassword" class="form-input" placeholder="Enter your password" required aria-required="true">
+            <input type="password" id="loginPassword" class="form-input" placeholder="Enter your password" required
+              aria-required="true">
             <i class="fas fa-lock input-icon"></i>
-            <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')" aria-label="Toggle password visibility">
+            <button type="button" class="password-toggle" onclick="togglePassword('loginPassword')"
+              aria-label="Toggle password visibility">
               <i class="fas fa-eye" id="loginPasswordIcon"></i>
             </button>
           </div>
@@ -912,11 +998,13 @@
             <span>Or continue with</span>
           </div>
           <div class="social-buttons">
-            <button type="button" class="social-btn google" onclick="socialLogin('google')" aria-label="Login with Google">
+            <button type="button" class="social-btn google" onclick="socialLogin('google')"
+              aria-label="Login with Google">
               <i class="fab fa-google"></i>
               Google
             </button>
-            <button type="button" class="social-btn facebook" onclick="socialLogin('facebook')" aria-label="Login with Facebook">
+            <button type="button" class="social-btn facebook" onclick="socialLogin('facebook')"
+              aria-label="Login with Facebook">
               <i class="fab fa-facebook-f"></i>
               Facebook
             </button>
@@ -932,7 +1020,8 @@
         <div class="form-group">
           <label class="form-label" for="signupName">Full Name</label>
           <div style="position: relative;">
-            <input type="text" id="signupName" class="form-input" placeholder="Enter your full name" required aria-required="true">
+            <input type="text" id="signupName" class="form-input" placeholder="Enter your full name" required
+              aria-required="true">
             <i class="fas fa-user input-icon"></i>
           </div>
           <div class="error-message" id="signupNameError" aria-live="polite"></div>
@@ -941,7 +1030,8 @@
         <div class="form-group">
           <label class="form-label" for="signupEmail">Email Address</label>
           <div style="position: relative;">
-            <input type="email" id="signupEmail" class="form-input" placeholder="Enter your email" required aria-required="true">
+            <input type="email" id="signupEmail" class="form-input" placeholder="Enter your email" required
+              aria-required="true">
             <i class="fas fa-envelope input-icon"></i>
           </div>
           <div class="error-message" id="signupEmailError" aria-live="polite"></div>
@@ -950,9 +1040,11 @@
         <div class="form-group">
           <label class="form-label" for="signupPassword">Password</label>
           <div style="position: relative;">
-            <input type="password" id="signupPassword" class="form-input" placeholder="Create a password" required aria-required="true">
+            <input type="password" id="signupPassword" class="form-input" placeholder="Create a password" required
+              aria-required="true">
             <i class="fas fa-lock input-icon"></i>
-            <button type="button" class="password-toggle" onclick="togglePassword('signupPassword')" aria-label="Toggle password visibility">
+            <button type="button" class="password-toggle" onclick="togglePassword('signupPassword')"
+              aria-label="Toggle password visibility">
               <i class="fas fa-eye" id="signupPasswordIcon"></i>
             </button>
           </div>
@@ -962,9 +1054,11 @@
         <div class="form-group">
           <label class="form-label" for="confirmPassword">Confirm Password</label>
           <div style="position: relative;">
-            <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm your password" required aria-required="true">
+            <input type="password" id="confirmPassword" class="form-input" placeholder="Confirm your password" required
+              aria-required="true">
             <i class="fas fa-lock input-icon"></i>
-            <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')" aria-label="Toggle password visibility">
+            <button type="button" class="password-toggle" onclick="togglePassword('confirmPassword')"
+              aria-label="Toggle password visibility">
               <i class="fas fa-eye" id="confirmPasswordIcon"></i>
             </button>
           </div>
@@ -980,11 +1074,13 @@
             <span>Or sign up with</span>
           </div>
           <div class="social-buttons">
-            <button type="button" class="social-btn google" onclick="socialLogin('google')" aria-label="Sign up with Google">
+            <button type="button" class="social-btn google" onclick="socialLogin('google')"
+              aria-label="Sign up with Google">
               <i class="fab fa-google"></i>
               Google
             </button>
-            <button type="button" class="social-btn facebook" onclick="socialLogin('facebook')" aria-label="Sign up with Facebook">
+            <button type="button" class="social-btn facebook" onclick="socialLogin('facebook')"
+              aria-label="Sign up with Facebook">
               <i class="fab fa-facebook-f"></i>
               Facebook
             </button>
@@ -992,8 +1088,8 @@
         </div>
 
         <div class="terms-text">
-          By creating an account, you agree to our 
-          <a href="#" onclick="showTerms()">Terms of Service</a> and 
+          By creating an account, you agree to our
+          <a href="#" onclick="showTerms()">Terms of Service</a> and
           <a href="#" onclick="showPrivacy()">Privacy Policy</a>
         </div>
       </form>
@@ -1006,7 +1102,7 @@
       const body = document.body;
       const themeIcon = document.getElementById('theme-icon');
       const currentTheme = body.getAttribute('data-theme');
-      
+
       if (currentTheme === 'dark') {
         body.removeAttribute('data-theme');
         themeIcon.classList.replace('fa-sun', 'fa-moon');
@@ -1022,7 +1118,7 @@
     function applySavedTheme() {
       const savedTheme = localStorage.getItem('theme');
       const themeIcon = document.getElementById('theme-icon');
-      
+
       if (savedTheme === 'dark') {
         document.body.setAttribute('data-theme', 'dark');
         themeIcon.classList.replace('fa-moon', 'fa-sun');
@@ -1033,7 +1129,7 @@
     function createParticles() {
       const particles = document.getElementById('particles');
       const particleCount = 1500;
-      
+
       for (let i = 0; i < particleCount; i++) {
         const particle = document.createElement('div');
         particle.className = 'particle';
@@ -1057,7 +1153,7 @@
       indicator.classList.remove('signup');
       loginToggle.classList.add('active');
       signupToggle.classList.remove('active');
-      
+
       clearMessages();
     }
 
@@ -1073,7 +1169,7 @@
       indicator.classList.add('signup');
       signupToggle.classList.add('active');
       loginToggle.classList.remove('active');
-      
+
       clearMessages();
     }
 
@@ -1081,7 +1177,7 @@
     function togglePassword(inputId) {
       const input = document.getElementById(inputId);
       const icon = document.getElementById(inputId + 'Icon');
-      
+
       if (input.type === 'password') {
         input.type = 'text';
         icon.classList.replace('fa-eye', 'fa-eye-slash');
@@ -1109,7 +1205,7 @@
     function showError(inputId, message) {
       const input = document.getElementById(inputId);
       const errorElement = document.getElementById(inputId + 'Error');
-      
+
       input.classList.add('error');
       errorElement.textContent = message;
       errorElement.classList.add('show');
@@ -1119,7 +1215,7 @@
     function clearError(inputId) {
       const input = document.getElementById(inputId);
       const errorElement = document.getElementById(inputId + 'Error');
-      
+
       input.classList.remove('error');
       errorElement.classList.remove('show');
     }
@@ -1128,7 +1224,7 @@
     function clearMessages() {
       const inputs = ['loginEmail', 'loginPassword', 'signupName', 'signupEmail', 'signupPassword', 'confirmPassword'];
       inputs.forEach(inputId => clearError(inputId));
-      
+
       const successMessage = document.getElementById('successMessage');
       successMessage.classList.remove('show');
     }
@@ -1140,18 +1236,23 @@
       successMessage.classList.add('show');
     }
 
+    // Helper: set cookie with expiry (in hours)
+    function setCookie(name, value, hours) {
+      const expires = new Date(Date.now() + hours * 60 * 60 * 1000).toUTCString();
+      document.cookie = `${name}=${value}; expires=${expires}; path=/; SameSite=Strict`;
+    }
+
     // Handle Login
-    function handleLogin(event) {
+    async function handleLogin(event) {
       event.preventDefault();
       clearMessages();
-      
+
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
       const submitBtn = event.target;
-      
+
       let isValid = true;
 
-      // Validate email
       if (!email) {
         showError('loginEmail', 'Email is required');
         isValid = false;
@@ -1160,7 +1261,6 @@
         isValid = false;
       }
 
-      // Validate password
       if (!password) {
         showError('loginPassword', 'Password is required');
         isValid = false;
@@ -1168,39 +1268,52 @@
 
       if (!isValid) return;
 
-      // Show loading state
       submitBtn.classList.add('loading');
       submitBtn.textContent = '';
 
-      // Simulate API call
-      setTimeout(() => {
+      try {
+        const response = await fetch('http://localhost:5000/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
         submitBtn.classList.remove('loading');
         submitBtn.textContent = 'Sign In';
-        
-        // Mock successful login
-        showSuccess('Login successful! Redirecting...');
-        
-        setTimeout(() => {
-          // Redirect to dashboard or main app
-          window.location.href = 'chatbot.html';
-        }, 2000);
-      }, 2000);
+
+        if (response.ok) {
+          // ✅ Store token in cookie
+          setCookie('auth_token', data.token, 1); // expires in 1 hour
+          showSuccess('Login successful! Redirecting...');
+
+          setTimeout(() => {
+            window.location.href = 'chatbot.html';
+          }, 2000);
+        } else {
+          showError('loginPassword', data.message || 'Login failed. Try again.');
+        }
+      } catch (err) {
+        submitBtn.classList.remove('loading');
+        submitBtn.textContent = 'Sign In';
+        showError('loginPassword', 'Server error. Please try again later.');
+        console.error('Login Error:', err);
+      }
     }
 
     // Handle Signup
-    function handleSignup(event) {
+    async function handleSignup(event) {
       event.preventDefault();
       clearMessages();
-      
+
       const name = document.getElementById('signupName').value.trim();
       const email = document.getElementById('signupEmail').value.trim();
       const password = document.getElementById('signupPassword').value;
       const confirmPassword = document.getElementById('confirmPassword').value;
       const submitBtn = event.target;
-      
+
       let isValid = true;
 
-      // Validate name
       if (!name) {
         showError('signupName', 'Full name is required');
         isValid = false;
@@ -1209,7 +1322,6 @@
         isValid = false;
       }
 
-      // Validate email
       if (!email) {
         showError('signupEmail', 'Email is required');
         isValid = false;
@@ -1218,7 +1330,6 @@
         isValid = false;
       }
 
-      // Validate password
       if (!password) {
         showError('signupPassword', 'Password is required');
         isValid = false;
@@ -1227,7 +1338,6 @@
         isValid = false;
       }
 
-      // Validate confirm password
       if (!confirmPassword) {
         showError('confirmPassword', 'Please confirm your password');
         isValid = false;
@@ -1238,26 +1348,36 @@
 
       if (!isValid) return;
 
-      // Show loading state
       submitBtn.classList.add('loading');
       submitBtn.textContent = '';
 
-      // Simulate API call
-      setTimeout(() => {
+      try {
+        const response = await fetch('http://localhost:5000/api/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: name, email, password })
+        });
+
+        const data = await response.json();
         submitBtn.classList.remove('loading');
         submitBtn.textContent = 'Create Account';
-        
-        // Mock successful signup
-        showSuccess('Account created successfully! Please check your email for verification.');
-        
-        // Reset form
-        document.getElementById('signupForm').reset();
-        
-        // Switch to login form after 3 seconds
-        setTimeout(() => {
-          showLogin();
-        }, 3000);
-      }, 2000);
+
+        if (response.ok) {
+          // ✅ Store token in cookie
+          setCookie('auth_token', data.token, 1); // expires in 1 hour
+          showSuccess('Account created successfully! Redirecting...');
+
+          document.getElementById('signupForm').reset();
+          setTimeout(() => showLogin(), 2000);
+        } else {
+          showError('signupEmail', data.message || 'Signup failed. Try again.');
+        }
+      } catch (err) {
+        submitBtn.classList.remove('loading');
+        submitBtn.textContent = 'Create Account';
+        showError('signupEmail', 'Server error. Please try again later.');
+        console.error('Signup Error:', err);
+      }
     }
 
     // Social Login
@@ -1266,7 +1386,7 @@
       // Replace alert with a custom modal or message box for better UX
       // For now, using console log for demo purposes
       console.log(`${providerName} login integration would be implemented here. For demo purposes, this will redirect to the main app.`);
-      
+
       // In real implementation, this would integrate with OAuth providers
       setTimeout(() => {
         window.location.href = 'chatbot.html';
@@ -1276,17 +1396,17 @@
     // Forgot Password
     function showForgotPassword() {
       const email = document.getElementById('loginEmail').value.trim();
-      
+
       if (!email) {
         showError('loginEmail', 'Please enter your email address first');
         return;
       }
-      
+
       if (!validateEmail(email)) {
         showError('loginEmail', 'Please enter a valid email address');
         return;
       }
-      
+
       clearMessages();
       showSuccess('Password reset link sent to your email!');
     }
@@ -1308,7 +1428,7 @@
       const emailInputs = ['loginEmail', 'signupEmail'];
       emailInputs.forEach(inputId => {
         const input = document.getElementById(inputId);
-        input.addEventListener('blur', function() {
+        input.addEventListener('blur', function () {
           const email = this.value.trim();
           if (email && !validateEmail(email)) {
             showError(inputId, 'Please enter a valid email address');
@@ -1316,14 +1436,14 @@
             clearError(inputId);
           }
         });
-        input.addEventListener('input', function() {
-            clearError(inputId); // Clear error as user types
+        input.addEventListener('input', function () {
+          clearError(inputId); // Clear error as user types
         });
       });
 
       // Password validation
       const passwordInput = document.getElementById('signupPassword');
-      passwordInput.addEventListener('input', function() {
+      passwordInput.addEventListener('input', function () {
         const password = this.value;
         if (password.length > 0 && password.length < 8) {
           showError('signupPassword', 'Password must be at least 8 characters long');
@@ -1331,7 +1451,7 @@
           clearError('signupPassword');
         }
       });
-      passwordInput.addEventListener('blur', function() {
+      passwordInput.addEventListener('blur', function () {
         const password = this.value;
         if (password.length > 0 && password.length < 8) {
           showError('signupPassword', 'Password must be at least 8 characters long');
@@ -1341,28 +1461,28 @@
 
       // Confirm password validation
       const confirmPasswordInput = document.getElementById('confirmPassword');
-      confirmPasswordInput.addEventListener('input', function() {
+      confirmPasswordInput.addEventListener('input', function () {
         const password = document.getElementById('signupPassword').value;
         const confirmPassword = this.value;
-        
+
         if (confirmPassword.length > 0 && password !== confirmPassword) {
           showError('confirmPassword', 'Passwords do not match');
         } else if (password === confirmPassword && confirmPassword.length > 0) {
           clearError('confirmPassword');
         }
       });
-      confirmPasswordInput.addEventListener('blur', function() {
+      confirmPasswordInput.addEventListener('blur', function () {
         const password = document.getElementById('signupPassword').value;
         const confirmPassword = this.value;
         if (confirmPassword.length > 0 && password !== confirmPassword) {
-            showError('confirmPassword', 'Passwords do not match');
+          showError('confirmPassword', 'Passwords do not match');
         }
       });
 
 
       // Name validation
       const nameInput = document.getElementById('signupName');
-      nameInput.addEventListener('blur', function() {
+      nameInput.addEventListener('blur', function () {
         const name = this.value.trim();
         if (name && !validateName(name)) {
           showError('signupName', 'Name must be at least 2 characters long');
@@ -1370,7 +1490,7 @@
           clearError('signupName');
         }
       });
-      nameInput.addEventListener('input', function() {
+      nameInput.addEventListener('input', function () {
         clearError('signupName'); // Clear error as user types
       });
     }
@@ -1378,14 +1498,14 @@
     // Input focus animations
     function setupInputAnimations() {
       const inputs = document.querySelectorAll('.form-input');
-      
+
       inputs.forEach(input => {
-        input.addEventListener('focus', function() {
+        input.addEventListener('focus', function () {
           this.parentElement.style.transform = 'scale(1.02)';
           this.parentElement.style.transition = 'transform 0.2s ease-out';
         });
-        
-        input.addEventListener('blur', function() {
+
+        input.addEventListener('blur', function () {
           this.parentElement.style.transform = 'scale(1)';
         });
       });
@@ -1393,12 +1513,12 @@
 
     // Keyboard navigation
     function setupKeyboardNavigation() {
-      document.addEventListener('keydown', function(event) {
+      document.addEventListener('keydown', function (event) {
         // ESC key to close mobile menu or clear focus
         if (event.key === 'Escape') {
           document.activeElement.blur();
         }
-        
+
         // Enter key on toggle buttons
         if (event.key === 'Enter' && event.target.classList.contains('toggle-btn')) {
           event.target.click();
@@ -1410,13 +1530,13 @@
     function handleURLParameters() {
       const urlParams = new URLSearchParams(window.location.search);
       const action = urlParams.get('action');
-      
+
       if (action === 'signup') {
         showSignup();
       } else if (action === 'login') {
         showLogin();
       }
-      
+
       // Handle email parameter for password reset
       const email = urlParams.get('email');
       if (email) {
@@ -1427,16 +1547,16 @@
     // // Auto-save form data (excluding passwords for security)
     // function setupAutoSave() {
     //   const inputs = ['loginEmail', 'signupName', 'signupEmail'];
-      
+
     //   inputs.forEach(inputId => {
     //     const input = document.getElementById(inputId);
-        
+
     //     // Load saved data
     //     const savedValue = localStorage.getItem(inputId);
     //     if (savedValue) {
     //       input.value = savedValue;
     //     }
-        
+
     //     // Save on input
     //     input.addEventListener('input', function() {
     //       localStorage.setItem(inputId, this.value);
@@ -1453,22 +1573,22 @@
     // }
 
 
-      // No auto-save, no localStorage — inputs will always reset on refresh
-  function setupForm() {
-    const inputs = ['loginEmail', 'signupName', 'signupEmail'];
+    // No auto-save, no localStorage — inputs will always reset on refresh
+    function setupForm() {
+      const inputs = ['loginEmail', 'signupName', 'signupEmail'];
 
-    inputs.forEach(inputId => {
-      const input = document.getElementById(inputId);
-      if (input) {
-        input.value = ""; // always clear inputs on load
-      }
-    });
-  }
+      inputs.forEach(inputId => {
+        const input = document.getElementById(inputId);
+        if (input) {
+          input.value = ""; // always clear inputs on load
+        }
+      });
+    }
 
-  // Call setupForm on page load
-  window.addEventListener("DOMContentLoaded", setupForm);
+    // Call setupForm on page load
+    window.addEventListener("DOMContentLoaded", setupForm);
     // Initialize everything when DOM is loaded
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       applySavedTheme();
       createParticles();
       setupRealTimeValidation();
@@ -1476,23 +1596,23 @@
       setupKeyboardNavigation();
       handleURLParameters();
       setupAutoSave();
-      
+
       // Add smooth scrolling for better UX
       document.documentElement.style.scrollBehavior = 'smooth';
-      
+
       // Preload chatbot page for faster navigation
       const link = document.createElement('link');
       link.rel = 'prefetch';
       link.href = 'chatbot.html';
       document.head.appendChild(link);
-      
+
       // Add loading states to social buttons
       const socialButtons = document.querySelectorAll('.social-btn');
       socialButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
           this.style.opacity = '0.8';
           this.style.pointerEvents = 'none';
-          
+
           setTimeout(() => {
             this.style.opacity = '';
             this.style.pointerEvents = '';
@@ -1502,4 +1622,5 @@
     });
   </script>
 </body>
+
 </html>

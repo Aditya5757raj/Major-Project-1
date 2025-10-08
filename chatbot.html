@@ -868,271 +868,360 @@
   <button class="mobile-sidebar-toggle" id="mobileSidebarToggle" onclick="toggleMobileSidebar()">
     <i class="fas fa-bars"></i>
   </button>
+<script>
+const API_BASE_URL = 'http://127.0.0.1:8000';
+let chatHistory = [];
+let activeChatId = null;
+let currentUser = null;
 
-  <script>
-    const API_BASE_URL = 'http://127.0.0.1:8000';
-    let chatHistory = [{ id: 1, title: "Tenant rights discussion" }, { id: 2, title: "Consumer protection query" }];
-    let activeChatId = 1;
-    let isNewChat = true;
+// ---------------------- INITIALIZATION ----------------------
+document.addEventListener('DOMContentLoaded', async function () {
+    // Theme setup
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        setTheme('light');
+    } else {
+        setTheme('dark');
+    }
 
-    document.addEventListener('DOMContentLoaded', function () {
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) { setTheme('light'); } else { setTheme('dark'); }
-      document.getElementById('chatInput').focus();
-      createParticles();
-      renderWelcomeScreen();
-      renderChatHistory();
-      const mainSidebarToggle = document.querySelector('.mobile-sidebar-toggle');
-      if (window.innerWidth > 968) { mainSidebarToggle.style.display = 'none'; }
-      window.addEventListener('resize', () => { mainSidebarToggle.style.display = window.innerWidth > 968 ? 'none' : 'flex'; });
+    document.getElementById('chatInput').focus();
+    createParticles();
+    currentUser = await getTokenInfo();
+    if (!currentUser) return;
+
+    await loadChatHistory();
+    const mainSidebarToggle = document.querySelector('.mobile-sidebar-toggle');
+    if (window.innerWidth > 968) mainSidebarToggle.style.display = 'none';
+    window.addEventListener('resize', () => {
+        mainSidebarToggle.style.display = window.innerWidth > 968 ? 'none' : 'flex';
     });
+});
 
-    function createParticles() {
-      const particlesContainer = document.getElementById('particles');
-      if (!particlesContainer) return;
-      const particleCount = window.innerWidth > 768 ? 40 : 15;
-      for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.animationDuration = (Math.random() * 5 + 5) + 's';
-        particle.style.animationDelay = Math.random() * 7 + 's';
-        particlesContainer.appendChild(particle);
-      }
+// ---------------------- PARTICLES ----------------------
+function createParticles() {
+    const container = document.getElementById('particles');
+    if (!container) return;
+    const count = window.innerWidth > 768 ? 40 : 15;
+    for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.animationDuration = (Math.random() * 5 + 5) + 's';
+        p.style.animationDelay = Math.random() * 7 + 's';
+        container.appendChild(p);
     }
+}
 
-    function handleInput(textarea) {
-      autoResize(textarea);
-      const sendBtn = document.getElementById('sendBtn');
-      if (textarea.value.trim().length > 0) { sendBtn.classList.add('active'); }
-      else { sendBtn.classList.remove('active'); }
-    }
+// ---------------------- INPUT HANDLING ----------------------
+function handleInput(textarea) {
+    autoResize(textarea);
+    const sendBtn = document.getElementById('sendBtn');
+    if (textarea.value.trim().length > 0) sendBtn.classList.add('active');
+    else sendBtn.classList.remove('active');
+}
 
-    function toggleSidebarCollapse() {
-      const sidebar = document.getElementById('sidebar');
-      const toggleIcon = document.getElementById('sidebar-toggle-icon');
-      sidebar.classList.toggle('collapsed');
-      toggleIcon.className = sidebar.classList.contains('collapsed') ? 'fas fa-chevron-right' : 'fas fa-chevron-left';
-    }
+function autoResize(textarea) {
+    textarea.style.height = 'auto';
+    textarea.style.height = `${Math.min(textarea.scrollHeight, 120)}px`;
+}
 
-    function navigateBack() { window.history.back(); }
-    function toggleMobileSidebar() {
-      document.getElementById('sidebar').classList.toggle('open');
-      document.getElementById('overlay').classList.toggle('active');
+function handleKeyPress(event) {
+    if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
     }
-    function setTheme(theme) {
-      document.body.setAttribute('data-theme', theme);
-      document.querySelectorAll('.theme-icon-display').forEach(icon => icon.className = `fas ${theme === 'dark' ? 'fa-sun' : 'fa-moon'} theme-icon-display`);
-    }
-    function toggleTheme() { setTheme(document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); }
-    function autoResize(textarea) { textarea.style.height = 'auto'; textarea.style.height = `${Math.min(textarea.scrollHeight, 120)}px`; }
-    function handleKeyPress(event) { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendMessage(); } }
-    function attachFile() { alert('File attachment feature coming soon!'); }
+}
 
-    function renderChatHistory() {
-      const list = document.getElementById('chat-history-list');
-      list.innerHTML = '';
-      chatHistory.forEach(chat => {
+// ---------------------- THEME & SIDEBAR ----------------------
+function toggleSidebarCollapse() {
+    const sidebar = document.getElementById('sidebar');
+    const icon = document.getElementById('sidebar-toggle-icon');
+    sidebar.classList.toggle('collapsed');
+    icon.className = sidebar.classList.contains('collapsed') ? 'fas fa-chevron-right' : 'fas fa-chevron-left';
+}
+
+function toggleMobileSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('active');
+}
+
+function setTheme(theme) {
+    document.body.setAttribute('data-theme', theme);
+    document.querySelectorAll('.theme-icon-display').forEach(icon => icon.className = `fas ${theme === 'dark' ? 'fa-sun' : 'fa-moon'} theme-icon-display`);
+}
+
+function toggleTheme() {
+    setTheme(document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+// ---------------------- USER TOKEN ----------------------
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+}
+
+async function getTokenInfo() {
+    try {
+        const token = getCookie('auth_token');
+        if (!token) {
+            window.location.href = '/Major-Project-1/login.html';
+            return null;
+        }
+        const res = await fetch('http://localhost:5000/api/token-info', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        if (!res.ok) throw new Error('Failed to fetch token info');
+        const data = await res.json();
+        return data.user || null;
+    } catch (err) {
+        console.error("Error fetching token info:", err.message);
+        return null;
+    }
+}
+
+// ---------------------- CHAT HISTORY ----------------------
+async function loadChatHistory() {
+    if (!currentUser) return;
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/chats/${currentUser.email}`);
+        const data = await res.json();
+        console.log('[LOAD CHATS] Response:', data);
+        
+        chatHistory = data.chats || [];
+        
+        // If no active chat and chats exist, select the first one
+        if (!activeChatId && chatHistory.length > 0) {
+            activeChatId = chatHistory[0].id;
+        }
+        
+        renderChatHistory();
+        
+        // Load messages for active chat or show welcome screen
+        if (activeChatId) {
+            await loadChatMessages(activeChatId);
+        } else {
+            renderWelcomeScreen();
+        }
+    } catch (err) {
+        console.error("[LOAD CHATS] Failed:", err);
+        renderWelcomeScreen();
+    }
+}
+
+function renderChatHistory() {
+    const list = document.getElementById('chat-history-list');
+    list.innerHTML = '';
+    
+    if (chatHistory.length === 0) {
+        list.innerHTML = '<li style="padding: 1rem; text-align: center; color: var(--text-secondary);">No chats yet</li>';
+        return;
+    }
+    
+    chatHistory.forEach(chat => {
         const item = document.createElement('li');
         item.className = 'chat-history-item';
         if (chat.id === activeChatId) item.classList.add('active');
-        item.innerHTML = `<div class="chat-history-item-main"><i class="fas fa-message"></i><span>${chat.title}</span></div><button class="delete-chat-btn" onclick="deleteChat(${chat.id}, event)"><i class="fas fa-trash-alt"></i></button>`;
-        item.addEventListener('click', () => { activeChatId = chat.id; renderChatHistory(); });
+        
+        item.innerHTML = `
+            <div class="chat-history-item-main">
+                <i class="fas fa-message"></i>
+                <span>${chat.title || 'Untitled Chat'}</span>
+            </div>
+            <button class="delete-chat-btn"><i class="fas fa-trash-alt"></i></button>
+        `;
+        
+        item.querySelector('.chat-history-item-main').addEventListener('click', async () => {
+            activeChatId = chat.id;
+            renderChatHistory();
+            await loadChatMessages(activeChatId);
+        });
+        
+        item.querySelector('.delete-chat-btn').addEventListener('click', e => {
+            e.stopPropagation();
+            deleteChat(chat.id);
+        });
+        
         list.appendChild(item);
-      });
+    });
+}
+
+// ---------------------- LOAD MESSAGES ----------------------
+async function loadChatMessages(chatId) {
+    if (!chatId) {
+        renderWelcomeScreen();
+        return;
+    }
+    
+    try {
+        const res = await fetch(`${API_BASE_URL}/messages/${chatId}`);
+        const data = await res.json();
+        console.log('[LOAD MESSAGES] Response:', data);
+        
+        const chatMessages = document.getElementById('chatMessages');
+        chatMessages.innerHTML = '';
+        
+        if (data.messages && data.messages.length > 0) {
+            data.messages.forEach(msg => {
+                addMessageToUI(msg.message, msg.role === 'user' ? 'user' : 'bot');
+            });
+        }
+    } catch (err) {
+        console.error("[LOAD MESSAGES] Failed:", err);
+    }
+}
+
+// ---------------------- SEND MESSAGE ----------------------
+async function sendMessage() {
+    const input = document.getElementById('chatInput');
+    const message = input.value.trim();
+    if (!message) return;
+
+    if (!currentUser) {
+        alert('Please log in first');
+        return;
     }
 
-    function addChat(title) {
-      const newChat = { id: Date.now(), title: title };
-      chatHistory.unshift(newChat);
-      activeChatId = newChat.id;
-      isNewChat = false;
-      renderChatHistory();
-    }
+    // Clear input immediately
+    input.value = '';
+    handleInput(input);
 
-    function deleteChat(id, event) {
-      event.stopPropagation();
-      if (confirm("Are you sure you want to delete this chat?")) {
-        chatHistory = chatHistory.filter(chat => chat.id !== id);
-        if (activeChatId === id) newChat();
-        renderChatHistory();
-      }
-    }
+    // Add user message to UI
+    addMessageToUI(message, 'user');
+    showTypingIndicator();
 
-    function newChat() {
-      activeChatId = null;
-      isNewChat = true;
-      renderWelcomeScreen();
-      renderChatHistory();
-      document.getElementById('chatInput').value = '';
-      if (window.innerWidth < 968) toggleMobileSidebar();
-    }
+    const payload = {
+        query: message,
+        chat: { email: currentUser.email },
+        chat_id: activeChatId  // Send current chat_id or null for new chat
+    };
 
-    function clearChat() {
-      if (activeChatId && !isNewChat) {
-        alert("Clearing current chat messages...");
-        document.getElementById('chatMessages').innerHTML = '';
-      } else { newChat(); }
-    }
+    try {
+        const res = await fetch(`${API_BASE_URL}/ask`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        
+        const data = await res.json();
+        console.log('[SEND MESSAGE] Response:', data);
 
-    function renderWelcomeScreen() {
-      const chatMessages = document.getElementById('chatMessages');
-      chatMessages.innerHTML = `
+        // Add AI response to UI
+        addMessageToUI(data.answer, 'bot');
+
+        // Update activeChatId if this was a new chat
+        if (!activeChatId && data.chat_id) {
+            activeChatId = data.chat_id;
+        }
+
+        // Reload chat history to update sidebar
+        await loadChatHistory();
+    } catch (err) {
+        console.error('[SEND MESSAGE] Error:', err);
+        addMessageToUI(`Error: ${err.message}`, 'error');
+    } finally {
+        hideTypingIndicator();
+    }
+}
+
+// ---------------------- ADD MESSAGE TO UI ----------------------
+function addMessageToUI(content, sender) {
+    const chatMessages = document.getElementById('chatMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${sender}`;
+
+    const avatarIcon = sender === 'user' ? 'fas fa-user' : 'fas fa-robot';
+    const formattedContent = content
+        .replace(/\n/g, '<br>')
+        .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+        .replace(/\*(.*?)\*/g, '<i>$1</i>')
+        .replace(/`([^`]+)`/g, '<code>$1</code>');
+
+    messageDiv.innerHTML = `
+        <div class="message-avatar"><i class="${avatarIcon}"></i></div>
+        <div class="message-content">
+            <p>${formattedContent}</p>
+            <div class="message-time">${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+        </div>
+    `;
+    
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// ---------------------- TYPING INDICATOR ----------------------
+function showTypingIndicator() {
+    if (document.getElementById('typingIndicator')) return;
+    const chatMessages = document.getElementById('chatMessages');
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'message bot typing-indicator';
+    typingDiv.id = 'typingIndicator';
+    typingDiv.innerHTML = `
+        <div class="message-avatar"><i class="fas fa-robot"></i></div>
+        <div class="typing-dots">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        </div>
+    `;
+    chatMessages.appendChild(typingDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function hideTypingIndicator() {
+    const indicator = document.getElementById('typingIndicator');
+    if (indicator) indicator.remove();
+}
+
+// ---------------------- NEW / DELETE CHAT ----------------------
+async function newChat() {
+    activeChatId = null;
+    renderWelcomeScreen();
+    document.getElementById('chatInput').value = '';
+    document.getElementById('chatInput').focus();
+    
+    if (window.innerWidth < 968) toggleMobileSidebar();
+}
+
+async function deleteChat(id) {
+    if (!confirm("Are you sure you want to delete this chat?")) return;
+    
+    try {
+        await fetch(`${API_BASE_URL}/chats/${id}`, { method: 'DELETE' });
+        
+        // If deleted chat was active, clear it
+        if (activeChatId === id) {
+            activeChatId = null;
+            renderWelcomeScreen();
+        }
+        
+        // Reload chat history
+        await loadChatHistory();
+    } catch (err) {
+        console.error('[DELETE CHAT] Error:', err);
+        alert("Failed to delete chat: " + err.message);
+    }
+}
+
+// ---------------------- WELCOME SCREEN ----------------------
+function renderWelcomeScreen() {
+    const chatMessages = document.getElementById('chatMessages');
+    chatMessages.innerHTML = `
         <div class="welcome-section" data-animate>
             <div class="welcome-logo">
-                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 3L3 7V17L12 21L21 17V7L12 3Z" stroke="var(--primary-orange)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M3 7L12 12M21 7L12 12M12 21V12" stroke="var(--primary-orange)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M16.5 9.5L7.5 14.5" stroke="var(--primary-blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
+                <!-- SVG logo here -->
             </div>
             <h1><span class="welcome-title-text">Hello! I'm your Legal Assistant</span></h1>
             <p>Ask me anything about Indian law, your rights, or legal procedures. Start a new conversation below.</p>
-        </div>`;
-      const newWelcome = document.querySelector("[data-animate]");
-      if (newWelcome) {
-        const observer = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add("visible");
-              observer.unobserve(entry.target);
-            }
-          });
-        }, { threshold: 0.1 });
-        observer.observe(newWelcome);
-      }
-    }
-
-    async function sendMessage() {
-      const input = document.getElementById('chatInput');
-      const message = input.value.trim();
-      if (!message) return;
-
-      if (isNewChat) {
-        // Assuming addChat creates a new chat in the sidebar
-        addChat(message.substring(0, 30) + (message.length > 30 ? '...' : ''));
-        document.getElementById('chatMessages').innerHTML = '';
-        isNewChat = false; // Set to false after creating the first message
-      }
-
-      addMessageToUI(message, 'user');
-      input.value = '';
-      handleInput(input); // Adjust input height if needed
-      showTypingIndicator();
-
-      // Prepare the payload for the backend
-     // Prepare the payload for the backend
-const payload = {
-  query: message, // the user's message
-};
-
-try {
-  // Make the API call to your backend
-  const response = await fetch(`${API_BASE_URL}/ask`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(payload),
-  });
-
-  if (!response.ok) {
-    // Try to parse a detailed error message from the backend
-    const errorData = await response.json().catch(() => ({ detail: 'An unknown error occurred.' }));
-    throw new Error(errorData.error || errorData.detail || 'Failed to get a response from the server.');
-  }
-
-  const result = await response.json();
-
-  // Extract the AI answer safely
-  let aiResponse;
-  if (typeof result.answer === 'string') {
-    // Backend returned a string (CLI-style)
-    aiResponse = result.answer;
-  } else if (typeof result.answer === 'object' && result.answer !== null) {
-    // Backend returned full dict (API-style)
-    aiResponse = result.answer.answer || JSON.stringify(result.answer);
-  } else {
-    // Fallback
-    aiResponse = String(result.answer);
-  }
-
-  console.log("AI Answer:", aiResponse);
-  addMessageToUI(aiResponse, 'ai');
-
-} catch (error) {
-  addMessageToUI(`Error: ${error.message}`, 'error');
-} finally {
-  hideTypingIndicator();
+        </div>
+    `;
 }
-
-
-    }
-
-    // function addMessageToUI(content, sender, isHTML = false) {
-    //   const chatMessages = document.getElementById('chatMessages');
-    //   const messageDiv = document.createElement('div');
-    //   messageDiv.className = `message ${sender}`;
-    //   // --- MODIFIED: Use icons for avatars ---
-    //   const avatarIcon = sender === 'user' ? 'fas fa-user' : 'fas fa-robot';
-    //   messageDiv.innerHTML = `<div class="message-avatar"><i class="${avatarIcon}"></i></div><div class="message-content">${isHTML ? content : `<p>${content}</p>`}<div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div></div>`;
-    //   chatMessages.appendChild(messageDiv);
-    //   chatMessages.scrollTop = chatMessages.scrollHeight;
-    // }
-    function addMessageToUI(content, sender, isHTML = false) {
-      const chatMessages = document.getElementById('chatMessages');
-      const messageDiv = document.createElement('div');
-      messageDiv.className = `message ${sender}`;
-
-      // Avatar icons
-      const avatarIcon = sender === 'user' ? 'fas fa-user' : 'fas fa-robot';
-
-      // Format the text (convert line breaks, preserve spacing, etc.)
-      let formattedContent = isHTML
-        ? content
-        : `<p>${content
-          .replace(/\n/g, '<br>')              // Preserve line breaks
-          .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') // Convert **bold**
-          .replace(/\*(.*?)\*/g, '<i>$1</i>')  // Convert *italic*
-          .replace(/`([^`]+)`/g, '<code>$1</code>') // Inline code formatting
-        }</p>`;
-
-      messageDiv.innerHTML = `
-    <div class="message-avatar">
-      <i class="${avatarIcon}"></i>
-    </div>
-    <div class="message-content">
-      ${formattedContent}
-      <div class="message-time">
-        ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-      </div>
-    </div>
-  `;
-
-      chatMessages.appendChild(messageDiv);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function showTypingIndicator() {
-      if (document.getElementById('typingIndicator')) return;
-      const chatMessages = document.getElementById('chatMessages');
-      const typingDiv = document.createElement('div');
-      typingDiv.className = 'message bot typing-indicator';
-      typingDiv.id = 'typingIndicator';
-      typingDiv.innerHTML = `<div class="message-avatar"><i class="fas fa-robot"></i></div><div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`;
-      chatMessages.appendChild(typingDiv);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function hideTypingIndicator() {
-      const typingIndicator = document.getElementById('typingIndicator');
-      if (typingIndicator) typingIndicator.remove();
-    }
-
-    function generateAIResponse(userMessage) {
-      let responseHTML = `<div class="legal-content"><p>I am an AI assistant and not a substitute for professional legal advice. For complex matters, please consult with a qualified lawyer.</p></div>`;
-      addMessageToUI(responseHTML, 'bot', true);
-    }
-  </script>
+</script>
 </body>
 
 </html>
