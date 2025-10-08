@@ -1424,34 +1424,49 @@
       }
     }
 
-    // Auto-save form data (excluding passwords for security)
-    function setupAutoSave() {
-      const inputs = ['loginEmail', 'signupName', 'signupEmail'];
+    // // Auto-save form data (excluding passwords for security)
+    // function setupAutoSave() {
+    //   const inputs = ['loginEmail', 'signupName', 'signupEmail'];
       
-      inputs.forEach(inputId => {
-        const input = document.getElementById(inputId);
+    //   inputs.forEach(inputId => {
+    //     const input = document.getElementById(inputId);
         
-        // Load saved data
-        const savedValue = localStorage.getItem(inputId);
-        if (savedValue) {
-          input.value = savedValue;
-        }
+    //     // Load saved data
+    //     const savedValue = localStorage.getItem(inputId);
+    //     if (savedValue) {
+    //       input.value = savedValue;
+    //     }
         
-        // Save on input
-        input.addEventListener('input', function() {
-          localStorage.setItem(inputId, this.value);
-        });
-      });
-    }
+    //     // Save on input
+    //     input.addEventListener('input', function() {
+    //       localStorage.setItem(inputId, this.value);
+    //     });
+    //   });
+    // }
 
-    // Clear saved data on successful login/signup
-    function clearSavedData() {
-      const inputs = ['loginEmail', 'signupName', 'signupEmail'];
-      inputs.forEach(inputId => {
-        localStorage.removeItem(inputId);
-      });
-    }
+    // // Clear saved data on successful login/signup
+    // function clearSavedData() {
+    //   const inputs = ['loginEmail', 'signupName', 'signupEmail'];
+    //   inputs.forEach(inputId => {
+    //     localStorage.removeItem(inputId);
+    //   });
+    // }
 
+
+      // No auto-save, no localStorage — inputs will always reset on refresh
+  function setupForm() {
+    const inputs = ['loginEmail', 'signupName', 'signupEmail'];
+
+    inputs.forEach(inputId => {
+      const input = document.getElementById(inputId);
+      if (input) {
+        input.value = ""; // always clear inputs on load
+      }
+    });
+  }
+
+  // Call setupForm on page load
+  window.addEventListener("DOMContentLoaded", setupForm);
     // Initialize everything when DOM is loaded
     document.addEventListener('DOMContentLoaded', function() {
       applySavedTheme();
