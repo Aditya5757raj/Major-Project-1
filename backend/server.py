@@ -9,7 +9,7 @@ from mysql.connector import Error
 from google import genai
 from datetime import datetime
 
-from rag1 import ingest_file
+from rag1 import ingest_file,ask_query
 
 # ------------------- FastAPI App -------------------
 app = FastAPI()
@@ -97,7 +97,7 @@ async def ask_endpoint(request: Request):
 
         context.append({"role": "user", "message": query})
         prompt = "\n".join([f"{c['role']}: {c['message']}" for c in context])
-        answer = ask_gemini_api(prompt)
+        answer = ask_query(prompt)
         context.append({"role": "assistant", "message": answer})
 
         # ------------------- Store in MySQL -------------------

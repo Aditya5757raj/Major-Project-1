@@ -583,7 +583,105 @@
     .message.user .message-time {
       color: rgba(255, 255, 255, 0.8);
     }
+    .feedback-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
 
+    .message.bot:hover .feedback-buttons {
+      opacity: 1;
+    }
+
+    .feedback-btn {
+      width: 28px;
+      height: 28px;
+      border: none;
+      border-radius: 50%;
+      background: var(--light-gray);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+
+    .feedback-btn:hover {
+      background: var(--primary-orange);
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .feedback-btn.active {
+      background: var(--primary-orange);
+      color: white;
+    }
+
+    .feedback-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .feedback-content {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: var(--border-radius-large);
+      max-width: 400px;
+      width: 90%;
+      box-shadow: var(--shadow-medium);
+    }
+
+    .feedback-content h3 {
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    .feedback-textarea {
+      width: 100%;
+      min-height: 100px;
+      padding: 0.75rem;
+      border: 1px solid var(--border-light);
+      border-radius: var(--border-radius-small);
+      resize: vertical;
+      font-family: inherit;
+    }
+
+    .feedback-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      justify-content: flex-end;
+    }
+
+    .feedback-submit, .feedback-cancel {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: var(--border-radius-small);
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .feedback-submit {
+      background: var(--primary-orange);
+      color: white;
+    }
+
+    .feedback-cancel {
+      background: var(--light-gray);
+      color: var(--text-secondary);
+    }
     .typing-indicator {
       display: flex;
       align-items: center;
@@ -860,6 +958,20 @@
           <button class="send-btn" id="sendBtn" onclick="sendMessage()" aria-label="Send message"><i
               class="fas fa-paper-plane"></i></button>
         </div>
+      </div>
+    </div>
+  </div>
+ 
+
+
+  <div class="feedback-modal" id="feedbackModal">
+    <div class="feedback-content">
+      <h3>Help us improve</h3>
+      <p>What could be better about this response?</p>
+      <textarea class="feedback-textarea" id="feedbackText" placeholder="Please share your feedback..."></textarea>
+      <div class="feedback-actions">
+        <button class="feedback-cancel" onclick="closeFeedbackModal()">Cancel</button>
+        <button class="feedback-submit" onclick="submitFeedback()">Submit</button>
       </div>
     </div>
   </div>
@@ -1147,6 +1259,16 @@ function addMessageToUI(content, sender) {
         <div class="message-content">
             <p>${formattedContent}</p>
             <div class="message-time">${new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</div>
+            ${sender === 'bot' ? `
+                <div class="feedback-buttons">
+                    <button class="feedback-btn" onclick="giveFeedback(this, 'up')" title="Good response">
+                        <i class="fas fa-thumbs-up"></i>
+                    </button>
+                    <button class="feedback-btn" onclick="giveFeedback(this, 'down')" title="Poor response">
+                        <i class="fas fa-thumbs-down"></i>
+                    </button>
+                </div>
+            ` : ''}
         </div>
     `;
     
@@ -1194,7 +1316,7 @@ async function deleteChat(id) {
     try {
         await fetch(`${API_BASE_URL}/chats/${id}`, { method: 'DELETE' });
         
-        // If deleted chat was active, clear it
+       // If deleted chat was active, clear it
         if (activeChatId === id) {
             activeChatId = null;
             renderWelcomeScreen();
@@ -1209,18 +1331,71 @@ async function deleteChat(id) {
 }
 
 // ---------------------- WELCOME SCREEN ----------------------
+// ---------------------- WELCOME SCREEN ----------------------
 function renderWelcomeScreen() {
     const chatMessages = document.getElementById('chatMessages');
     chatMessages.innerHTML = `
         <div class="welcome-section" data-animate>
             <div class="welcome-logo">
-                <!-- SVG logo here -->
+                ⚖️
             </div>
             <h1><span class="welcome-title-text">Hello! I'm your Legal Assistant</span></h1>
             <p>Ask me anything about Indian law, your rights, or legal procedures. Start a new conversation below.</p>
         </div>
     `;
 }
+// Update renderWelcomeScreen to trigger animation
+const originalRenderWelcomeScreen = renderWelcomeScreen;
+renderWelcomeScreen = function() {
+    originalRenderWelcomeScreen();
+    setTimeout(() => {
+        const welcomeSection = document.querySelector('[data-animate]');
+        if (welcomeSection) {
+            welcomeSection.classList.add('visible');
+        }
+    }, 100);
+};
+// ---------------------- FEEDBACK FUNCTIONS ----------------------
+let currentFeedbackButton = null;
+
+function giveFeedback(button, type) {
+    // Remove active class from siblings
+    const siblings = button.parentElement.querySelectorAll('.feedback-btn');
+    siblings.forEach(btn => btn.classList.remove('active'));
+    
+    // Add active class to clicked button
+    button.classList.add('active');
+    
+    if (type === 'up') {
+        // Just mark as positive feedback
+        console.log('Positive feedback given');
+    } else if (type === 'down') {
+        // Show feedback modal for negative feedback
+        currentFeedbackButton = button;
+        document.getElementById('feedbackModal').style.display = 'flex';
+        document.getElementById('feedbackText').focus();
+    }
+}
+
+function closeFeedbackModal() {
+    document.getElementById('feedbackModal').style.display = 'none';
+    document.getElementById('feedbackText').value = '';
+    currentFeedbackButton = null;
+}
+
+function submitFeedback() {
+    const feedbackText = document.getElementById('feedbackText').value.trim();
+    
+    if (feedbackText) {
+        // Here you can send feedback to backend
+        console.log('Negative feedback:', feedbackText);
+        
+        // Show success message (optional)
+        alert('Thank you for your feedback! We\'ll use it to improve our responses.');
+    }
+    
+    closeFeedbackModal();
+} 
 </script>
 </body>
 

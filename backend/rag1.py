@@ -422,25 +422,31 @@ def hybrid_retrieve(q: str, k=TOP_K):
     return results
 
 # ---------- Ask query (assemble contexts + call Gemini) ----------
-def ask_query(q: str):
-    hits = hybrid_retrieve(q, k=TOP_K)
-    # Build extracted metadata (basic)
-    extracted_meta = extract_metadata(hits or [], source_file="multi-doc-collection")
-    # Add a structured metadata doc for model visibility
-    meta_blob = json.dumps(extracted_meta, indent=2)
-    combined_contexts = hits.copy()
-    combined_contexts.append({"id": "system_meta", "doc_id": "system", "source": "system", "text": f"DOCUMENT METADATA:\n{meta_blob}", "pos": -1})
+def ask_query(q: str) -> str:
+    try:
+        hits = hybrid_retrieve(q, k=TOP_K)
+        extracted_meta = extract_metadata(hits or [], source_file="multi-doc-collection")
+        meta_blob = json.dumps(extracted_meta, indent=2)
 
-    jur, dom = ("IN", "GENERIC")
-    answer = answer_with_gemini(q, combined_contexts, jur, dom, metadata=extracted_meta)
-    return {
-        "answer": answer,
-        "contexts": [
-            {"doc_id": h.get("doc_id"), "source": h.get("source"), "pos_global": h.get("pos_global"), "snippet": h["text"][:800]}
-            for h in hits
-        ],
-        "doc_metadata": extracted_meta
-    }
+        combined_contexts = hits.copy()
+        combined_contexts.append({
+            "id": "system_meta",
+            "doc_id": "system",
+            "source": "system",
+            "text": f"DOCUMENT METADATA:\n{meta_blob}",
+            "pos": -1
+        })
+
+        jur, dom = ("IN", "GENERIC")
+        response = answer_with_gemini(q, combined_contexts, jur, dom, metadata=extracted_meta)
+
+        # match the same output format as ask_gemini_api
+        return response.text if hasattr(response, "text") else str(response)
+
+    except Exception as e:
+        print(f"[GEMINI ERROR] {e}", flush=True)
+        return "Error generating response from Gemini"
+
 
 # ---------- CLI ----------
 def main():
